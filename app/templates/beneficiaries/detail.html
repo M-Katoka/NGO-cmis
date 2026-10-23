@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h2>{{ b.full_name }} <span class="muted">{{ b.ref_no }}</span></h2>
+<p>DOB: {{ b.date_of_birth or '-' }} | Phone: {{ b.phone or '-' }} | Consent: {{ 'Yes (' ~ b.consent_date ~ ')' if b.consent_given else 'Not recorded' }}</p>
+<a class="btn" href="{{ url_for('cases.create', beneficiary_id=b.id) }}">+ Open new case</a></div>
+<div class="card"><h3>Cases</h3>{% for c in cases %}<p><a href="{{ url_for('cases.detail', case_id=c.id) }}">{{ c.case_no }}</a> - {{ c.category }} ({{ c.status }})</p>{% else %}<p class="muted">No accessible cases.</p>{% endfor %}</div>
+{% endblock %}

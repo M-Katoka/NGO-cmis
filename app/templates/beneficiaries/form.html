@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h2>Register beneficiary</h2>
+<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Full name<input name="full_name" required></label>
+<label>Sex<select name="sex"><option></option><option>F</option><option>M</option></select></label>
+<label>Date of birth<input type="date" name="date_of_birth"></label>
+<label>Phone<input name="phone"></label><label>Address<input name="address"></label>
+<label>Guardian (children / vulnerable persons)<input name="guardian_name"></label>
+<label><input type="checkbox" name="is_vulnerable" style="width:auto"> Vulnerable person</label>
+<label><input type="checkbox" name="consent_given" style="width:auto"> Consent recorded</label>
+<label>Basis for processing / notes<input name="processing_basis_note"></label>
+<button>Save</button></form></div>{% endblock %}

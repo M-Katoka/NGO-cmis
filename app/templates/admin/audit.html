@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h3>Audit log (latest 300)</h3><table><tr><th>Time (UTC)</th><th>User</th><th>Action</th><th>Entity</th><th>Detail</th><th>IP</th></tr>
+{% for e in entries %}<tr><td>{{ e.timestamp.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ e.user.username if e.user else '-' }}</td><td>{{ e.action }}</td><td>{{ e.entity or '' }} {{ e.entity_id or '' }}</td><td>{{ e.detail or '' }}</td><td>{{ e.ip_address or '' }}</td></tr>{% endfor %}</table></div>
+{% endblock %}

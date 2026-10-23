@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block content %}
+<div class="grid"><div class="card"><div class="muted">Open cases</div><div class="stat">{{ open_cases }}</div></div>
+<div class="card"><div class="muted">Overdue follow-ups</div><div class="stat {{ 'overdue' if overdue }}">{{ overdue|length }}</div></div>
+<div class="card"><div class="muted">Due in 7 days</div><div class="stat">{{ upcoming|length }}</div></div></div>
+<div class="card"><h3>Overdue follow-ups</h3>
+{% for f in overdue %}<p><span class="overdue">{{ f.due_date }}</span> - {{ f.description }} -
+<a href="{{ url_for('cases.detail', case_id=f.case_id) }}">{{ f.case.case_no }}</a></p>{% else %}<p class="muted">None.</p>{% endfor %}</div>
+<div class="card"><h3>Upcoming (next 7 days)</h3>
+{% for f in upcoming %}<p>{{ f.due_date }} - {{ f.description }} -
+<a href="{{ url_for('cases.detail', case_id=f.case_id) }}">{{ f.case.case_no }}</a></p>{% else %}<p class="muted">None.</p>{% endfor %}</div>
+{% endblock %}

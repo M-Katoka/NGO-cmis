@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card"><h2>{{ case.case_no }} - {{ case.category }}</h2>
+<p>Beneficiary: <a href="{{ url_for('beneficiaries.detail', beneficiary_id=case.beneficiary.id) }}">{{ case.beneficiary.full_name }}</a> |
+Priority: {{ case.priority }} | Status: <strong>{{ case.status }}</strong> | Assigned: {{ case.assigned_to.full_name if case.assigned_to else 'Unassigned' }}</p>
+{% if case.is_closed %}<p class="muted">Closed {{ case.closed_at.date() }} by {{ case.closed_by.full_name }}: {{ case.closure_reason }}</p>{% endif %}
+{% if current_user.role == 'supervisor' and not case.is_closed %}
+<form method="post" action="{{ url_for('cases.assign', case_id=case.id) }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<select name="assigned_to_id" style="width:auto">{% for w in workers %}<option value="{{ w.id }}">{{ w.full_name }}</option>{% endfor %}</select><button>Assign</button></form>{% endif %}</div>
+
+<div class="card"><h3>Case timeline</h3><table><tr><th>Date</th><th>Type</th><th>Detail</th><th>By</th></tr>
+{% for d,kind,text,who in case.timeline() %}<tr><td>{{ d }}</td><td>{{ kind }}</td><td>{{ text }}</td><td>{{ who.full_name if who else '' }}</td></tr>{% else %}<tr><td colspan="4" class="muted">No activity yet.</td></tr>{% endfor %}</table></div>
+
+<div class="card"><h3>Referrals</h3><table><tr><th>Provider</th><th>Service</th><th>Status</th><th>Verified</th><th></th></tr>
+{% for r in case.referrals %}<tr><td>{{ r.provider }}</td><td>{{ r.service }}</td><td>{{ r.status }}</td><td>{{ r.verified_on or '-' }}</td>
+<td><form method="post" class="inline" action="{{ url_for('cases.update_referral', case_id=case.id, referral_id=r.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<select name="status" style="width:auto">{% for s in ref_statuses %}<option {{ 'selected' if s==r.status }}>{{ s }}</option>{% endfor %}</select><button>Update</button></form></td></tr>{% endfor %}</table></div>
+
+<div class="card"><h3>Follow-ups</h3>
+{% for f in case.follow_ups %}<p class="{{ 'overdue' if f.is_overdue }}">{{ f.due_date }} - {{ f.description }} ({{ f.status }})
+{% if f.status=='pending' %}<form method="post" class="inline" action="{{ url_for('cases.complete_followup', case_id=case.id, fu_id=f.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Mark done</button></form>{% endif %}</p>{% endfor %}</div>
+
+{% if not case.is_closed %}
+<div class="grid">
+<div class="card"><h3>Add assessment</h3><form method="post" action="{{ url_for('cases.add_assessment', case_id=case.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Needs<textarea name="needs" required></textarea></label><label>Risk<select name="risk_level">{% for r in risks %}<option>{{ r }}</option>{% endfor %}</select></label>
+<label>Confidential notes<textarea name="notes"></textarea></label><button>Save</button></form></div>
+<div class="card"><h3>Record intervention</h3><form method="post" action="{{ url_for('cases.add_intervention', case_id=case.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Type<input name="intervention_type" required></label><label>Description<textarea name="description" required></textarea></label><button>Save</button></form></div>
+<div class="card"><h3>Create referral</h3><form method="post" action="{{ url_for('cases.add_referral', case_id=case.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Provider<input name="provider" required></label><label>Service<input name="service" required></label><label>Notes<textarea name="notes"></textarea></label><button>Save</button></form></div>
+<div class="card"><h3>Schedule follow-up</h3><form method="post" action="{{ url_for('cases.add_followup', case_id=case.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Due date<input type="date" name="due_date" required min="{{ today }}"></label><label>Description<input name="description" required></label><button>Save</button></form></div>
+</div>
+{% if current_user.role == 'supervisor' %}
+<div class="card"><h3>Authorised closure</h3><form method="post" action="{{ url_for('cases.close', case_id=case.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Outcome / reason<textarea name="closure_reason" required></textarea></label><button class="danger">Close case</button></form></div>{% endif %}
+{% endif %}
+{% endblock %}

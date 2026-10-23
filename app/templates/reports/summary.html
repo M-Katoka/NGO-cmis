@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<div class="grid"><div class="card"><div class="muted">Overdue follow-ups</div><div class="stat {{ 'overdue' if overdue }}">{{ overdue }}</div></div>
+{% for s in ['open','in_progress','closed'] %}<div class="card"><div class="muted">{{ s }} cases</div><div class="stat">{{ by_status.get(s,0) }}</div></div>{% endfor %}</div>
+<div class="grid"><div class="card"><h3>Cases by category</h3><table>{% for c,n in by_category %}<tr><td>{{ c }}</td><td>{{ n }}</td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Referrals by status</h3><table>{% for s,n in referrals.items() %}<tr><td>{{ s }}</td><td>{{ n }}</td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Open workload per worker</h3><table>{% for w,n in workload %}<tr><td>{{ w }}</td><td>{{ n }}</td></tr>{% endfor %}</table></div></div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h2>Open case for {{ b.full_name }}</h2>
+<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Category<input name="category" required placeholder="e.g. Child protection, Health, Education"></label>
+<label>Priority<select name="priority"><option>low</option><option selected>medium</option><option>high</option></select></label>
+{% if current_user.role == 'supervisor' %}<label>Assign to<select name="assigned_to_id"><option value="">Unassigned</option>{% for w in workers %}<option value="{{ w.id }}">{{ w.full_name }}</option>{% endfor %}</select></label>{% endif %}
+<button>Open case</button></form></div>{% endblock %}

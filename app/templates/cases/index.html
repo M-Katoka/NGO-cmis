@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><form><input name="q" placeholder="Case no. or beneficiary" value="{{ q }}">
+<select name="status"><option value="">Any status</option>{% for s in ['open','in_progress','closed'] %}<option {{ 'selected' if s==status }}>{{ s }}</option>{% endfor %}</select>
+<button>Filter</button> <a class="btn" href="{{ url_for('cases.export_csv') }}">Export CSV</a></form></div>
+<div class="card"><table><tr><th>Case</th><th>Beneficiary</th><th>Category</th><th>Priority</th><th>Status</th></tr>
+{% for c in cases %}<tr><td><a href="{{ url_for('cases.detail', case_id=c.id) }}">{{ c.case_no }}</a></td><td>{{ c.beneficiary.full_name }}</td><td>{{ c.category }}</td><td>{{ c.priority }}</td><td>{{ c.status }}</td></tr>{% endfor %}</table></div>
+{% endblock %}

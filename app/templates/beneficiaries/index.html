@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><form><input name="q" placeholder="Search name or reference" value="{{ q }}"><button>Search</button>
+<a class="btn" href="{{ url_for('beneficiaries.create') }}">+ Register</a></form></div>
+<div class="card"><table><tr><th>Ref</th><th>Name</th><th>Phone</th></tr>
+{% for b in beneficiaries %}<tr><td>{{ b.ref_no }}</td><td><a href="{{ url_for('beneficiaries.detail', beneficiary_id=b.id) }}">{{ b.full_name }}</a></td><td>{{ b.phone or '' }}</td></tr>{% endfor %}</table></div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}NGO CMIS{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body>
+{% if current_user.is_authenticated %}
+<nav><strong>NGO CMIS</strong>
+  {% if current_user.role in ('supervisor','case_worker') %}
+    <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('beneficiaries.index') }}">Beneficiaries</a>
+    <a href="{{ url_for('cases.index') }}">Cases</a>
+  {% endif %}
+  {% if current_user.role in ('supervisor','management') %}<a href="{{ url_for('reports.summary') }}">Reports</a>{% endif %}
+  {% if current_user.role == 'admin' %}<a href="{{ url_for('admin.users') }}">Users</a><a href="{{ url_for('admin.audit') }}">Audit log</a>{% endif %}
+  <span class="sp"></span><span class="muted">{{ current_user.full_name }} ({{ current_user.role }})</span>
+  <a href="{{ url_for('auth.logout') }}">Logout</a></nav>
+{% endif %}
+<main>
+{% with messages = get_flashed_messages(with_categories=true) %}{% for cat,m in messages %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</main></body></html>
