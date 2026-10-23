@@ -3,7 +3,7 @@
 Web-based case management for an NGO, implementing the workflow defined in Chapters One and Two:
 **registration → assignment → assessment → intervention / referral → follow-up → authorised closure.**
 
-Team: Mwamba Z Mwila (Chief Developer), Mwisa Katoka (System Designer), Mutuna Chama (System Analyst)
+
 
 ## Stack
 Python 3.11+, Flask, SQLAlchemy, Flask-Login, Flask-WTF (CSRF), SQLite (dev) / PostgreSQL (prod), pytest.
