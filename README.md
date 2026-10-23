@@ -1,6 +1,6 @@
-# NGO Case Management Information System (BIT326 – Group 5)
+# NGO Case Management Information System 
 
-Web-based case management for an NGO, implementing the workflow defined in Chapters One and Two:
+
 **registration → assignment → assessment → intervention / referral → follow-up → authorised closure.**
 
 
