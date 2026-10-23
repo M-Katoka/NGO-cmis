@@ -57,10 +57,21 @@ def create(beneficiary_id):
     workers = User.query.filter(User.role.in_(STAFF), User.active.is_(True)).all()
     if request.method == "POST":
         f = request.form
+        category = f.get("category", "").strip()
+        priority = f.get("priority", "medium")
+        if not category or len(category) > 120:
+            flash("Enter a case category up to 120 characters.", "error")
+            return render_template("cases/form.html", b=b, workers=workers)
+        if priority not in {"low", "medium", "high", "critical"}:
+            flash("Choose a valid priority.", "error")
+            return render_template("cases/form.html", b=b, workers=workers)
         assignee = int(f["assigned_to_id"]) if f.get("assigned_to_id") else None
         if current_user.role == "case_worker":
             assignee = current_user.id  # workers can only open cases for themselves
-        c = Case(beneficiary_id=b.id, category=f["category"].strip(), priority=f.get("priority", "medium"),
+        elif assignee and not db.session.get(User, assignee):
+            flash("Choose an active case worker.", "error")
+            return render_template("cases/form.html", b=b, workers=workers)
+        c = Case(beneficiary_id=b.id, category=category, priority=priority,
                  assigned_to_id=assignee)
         db.session.add(c)
         db.session.flush()
@@ -86,7 +97,12 @@ def detail(case_id):
 @roles_required("supervisor")
 def assign(case_id):
     case = get_case_or_403(case_id)
-    case.assigned_to_id = int(request.form["assigned_to_id"])
+    assigned_to_id = request.form.get("assigned_to_id", "")
+    assignee = db.session.get(User, int(assigned_to_id)) if assigned_to_id.isdigit() else None
+    if not assignee or not assignee.active or assignee.role not in STAFF:
+        flash("Choose an active case worker or supervisor.", "error")
+        return redirect(url_for("cases.detail", case_id=case.id))
+    case.assigned_to_id = assignee.id
     case.status = "in_progress" if case.status == "open" else case.status
     log("ASSIGN", "Case", case.id, f"to user {case.assigned_to_id}")
     db.session.commit()

@@ -20,4 +20,7 @@ def dashboard():
     upcoming = fq.filter(FollowUp.due_date >= date.today(),
                          FollowUp.due_date <= date.today() + timedelta(days=7)).order_by(FollowUp.due_date).all()
     open_cases = cases.filter(Case.status != "closed").count()
-    return render_template("dashboard.html", overdue=overdue, upcoming=upcoming, open_cases=open_cases)
+    in_progress = cases.filter(Case.status == "in_progress").count()
+    unassigned = cases.filter(Case.assigned_to_id.is_(None), Case.status != "closed").count()
+    return render_template("dashboard.html", overdue=overdue, upcoming=upcoming,
+                           open_cases=open_cases, in_progress=in_progress, unassigned=unassigned)

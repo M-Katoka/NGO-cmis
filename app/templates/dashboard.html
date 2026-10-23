@@ -1,11 +1,11 @@
-{% extends "base.html" %}{% block content %}
-<div class="grid"><div class="card"><div class="muted">Open cases</div><div class="stat">{{ open_cases }}</div></div>
-<div class="card"><div class="muted">Overdue follow-ups</div><div class="stat {{ 'overdue' if overdue }}">{{ overdue|length }}</div></div>
-<div class="card"><div class="muted">Due in 7 days</div><div class="stat">{{ upcoming|length }}</div></div></div>
-<div class="card"><h3>Overdue follow-ups</h3>
-{% for f in overdue %}<p><span class="overdue">{{ f.due_date }}</span> - {{ f.description }} -
-<a href="{{ url_for('cases.detail', case_id=f.case_id) }}">{{ f.case.case_no }}</a></p>{% else %}<p class="muted">None.</p>{% endfor %}</div>
-<div class="card"><h3>Upcoming (next 7 days)</h3>
-{% for f in upcoming %}<p>{{ f.due_date }} - {{ f.description }} -
-<a href="{{ url_for('cases.detail', case_id=f.case_id) }}">{{ f.case.case_no }}</a></p>{% else %}<p class="muted">None.</p>{% endfor %}</div>
+{% extends "base.html" %}{% block title %}Dashboard · NGO CMIS{% endblock %}{% block content %}
+<header class="page-header"><div><p class="eyebrow">Operations overview</p><h1>Good day, {{ current_user.full_name.split(' ')[0] }}</h1><p class="muted">Keep cases moving and follow-ups on track.</p></div><a class="btn" href="{{ url_for('cases.index') }}">View all cases</a></header>
+<div class="grid stats-grid"><div class="card stat-card"><div class="stat-label">Open cases</div><div class="stat">{{ open_cases }}</div><span class="muted">Active caseload</span></div>
+<div class="card stat-card"><div class="stat-label">In progress</div><div class="stat">{{ in_progress }}</div><span class="muted">Currently being worked</span></div>
+<div class="card stat-card"><div class="stat-label">Overdue follow-ups</div><div class="stat {{ 'overdue' if overdue }}">{{ overdue|length }}</div><span class="muted">Needs attention</span></div>
+<div class="card stat-card"><div class="stat-label">Unassigned</div><div class="stat">{{ unassigned }}</div><span class="muted">Ready for ownership</span></div></div>
+<div class="grid dashboard-columns"><section class="card"><div class="section-heading"><div><p class="eyebrow danger-text">Priority queue</p><h2>Overdue follow-ups</h2></div><span class="badge danger-badge">{{ overdue|length }}</span></div>
+{% for f in overdue %}<div class="task-row"><div><strong>{{ f.description }}</strong><span class="muted">{{ f.case.beneficiary.full_name }}</span></div><div class="task-meta"><span class="overdue">{{ f.due_date.strftime('%d %b %Y') }}</span><a href="{{ url_for('cases.detail', case_id=f.case_id) }}">{{ f.case.case_no }}</a></div></div>{% else %}<div class="empty-state"><strong>Nothing overdue</strong><span class="muted">Your follow-up queue is clear.</span></div>{% endfor %}</section>
+<section class="card"><div class="section-heading"><div><p class="eyebrow">Plan ahead</p><h2>Next 7 days</h2></div><span class="badge">{{ upcoming|length }}</span></div>
+{% for f in upcoming %}<div class="task-row"><div><strong>{{ f.description }}</strong><span class="muted">{{ f.case.beneficiary.full_name }}</span></div><div class="task-meta"><span>{{ f.due_date.strftime('%d %b') }}</span><a href="{{ url_for('cases.detail', case_id=f.case_id) }}">Open</a></div></div>{% else %}<div class="empty-state"><strong>No upcoming follow-ups</strong><span class="muted">New tasks will appear here.</span></div>{% endfor %}</section></div>
 {% endblock %}
