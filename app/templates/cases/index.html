@@ -1,7 +1,8 @@
 {% extends "base.html" %}{% block content %}
-<div class="card"><form><input name="q" placeholder="Case no. or beneficiary" value="{{ q }}">
-<select name="status"><option value="">Any status</option>{% for s in ['open','in_progress','closed'] %}<option {{ 'selected' if s==status }}>{{ s }}</option>{% endfor %}</select>
-<button>Filter</button> <a class="btn" href="{{ url_for('cases.export_csv') }}">Export CSV</a></form></div>
-<div class="card"><table><tr><th>Case</th><th>Beneficiary</th><th>Category</th><th>Priority</th><th>Status</th></tr>
-{% for c in cases %}<tr><td><a href="{{ url_for('cases.detail', case_id=c.id) }}">{{ c.case_no }}</a></td><td>{{ c.beneficiary.full_name }}</td><td>{{ c.category }}</td><td>{{ c.priority }}</td><td>{{ c.status }}</td></tr>{% endfor %}</table></div>
+<header class="page-header"><div><p class="eyebrow">Case management</p><h1>Cases</h1><p class="muted">Search and manage the cases assigned to your team.</p></div><a class="btn" href="{{ url_for('cases.export_csv') }}">Export CSV</a></header>
+<div class="card"><form class="filter-bar"><input name="q" placeholder="Search case number or beneficiary" value="{{ q }}" aria-label="Search cases">
+<select name="status" aria-label="Filter by status"><option value="">Any status</option>{% for s in ['open','in_progress','closed'] %}<option value="{{ s }}" {{ 'selected' if s==status }}>{{ s.replace('_', ' ')|title }}</option>{% endfor %}</select>
+<button>Apply filters</button>{% if q or status %}<a href="{{ url_for('cases.index') }}" class="muted">Clear</a>{% endif %}</form></div>
+<div class="card table-wrap"><table><caption class="sr-only">Case register</caption><thead><tr><th>Case</th><th>Beneficiary</th><th>Category</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+{% for c in cases %}<tr><td><a href="{{ url_for('cases.detail', case_id=c.id) }}"><strong>{{ c.case_no }}</strong></a></td><td>{{ c.beneficiary.full_name }}</td><td>{{ c.category }}</td><td><span class="badge">{{ c.priority|title }}</span></td><td>{{ c.status.replace('_', ' ')|title }}</td></tr>{% else %}<tr><td colspan="5"><div class="empty-state"><strong>No cases found</strong><span class="muted">Try changing your filters.</span></div></td></tr>{% endfor %}</tbody></table></div>
 {% endblock %}
