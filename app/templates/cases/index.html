@@ -1,8 +1,44 @@
-{% extends "base.html" %}{% block content %}
-<header class="page-header"><div><p class="eyebrow">Case management</p><h1>Cases</h1><p class="muted">Search and manage the cases assigned to your team.</p></div><a class="btn" href="{{ url_for('cases.export_csv') }}">Export CSV</a></header>
-<div class="card"><form class="filter-bar"><input name="q" placeholder="Search case number or beneficiary" value="{{ q }}" aria-label="Search cases">
-<select name="status" aria-label="Filter by status"><option value="">Any status</option>{% for s in ['open','in_progress','closed'] %}<option value="{{ s }}" {{ 'selected' if s==status }}>{{ s.replace('_', ' ')|title }}</option>{% endfor %}</select>
-<button>Apply filters</button>{% if q or status %}<a href="{{ url_for('cases.index') }}" class="muted">Clear</a>{% endif %}</form></div>
-<div class="card table-wrap"><table><caption class="sr-only">Case register</caption><thead><tr><th>Case</th><th>Beneficiary</th><th>Category</th><th>Priority</th><th>Status</th></tr></thead><tbody>
-{% for c in cases %}<tr><td><a href="{{ url_for('cases.detail', case_id=c.id) }}"><strong>{{ c.case_no }}</strong></a></td><td>{{ c.beneficiary.full_name }}</td><td>{{ c.category }}</td><td><span class="badge">{{ c.priority|title }}</span></td><td>{{ c.status.replace('_', ' ')|title }}</td></tr>{% else %}<tr><td colspan="5"><div class="empty-state"><strong>No cases found</strong><span class="muted">Try changing your filters.</span></div></td></tr>{% endfor %}</tbody></table></div>
+{% extends "base.html" %}
+{% block title %}Dashboard - NGO-cmis{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+    
+    <!-- Page Header Section -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 0.25rem;">Dashboard Overview</h1>
+            <p style="font-size: 0.95rem; color: #6b7280;">Welcome back, manage your records and tracking systems below.</p>
+        </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+        
+        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Total Beneficiaries</p>
+            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
+        </div>
+
+        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Active Projects</p>
+            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
+        </div>
+
+        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Reports Generated</p>
+            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
+        </div>
+
+    </div>
+
+    <!-- Main Content Area / Action Panel -->
+    <div style="background: #ffffff; padding: 2rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">Quick Actions</h3>
+        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.5;">
+            Your interface is now standardized with a modern layout structure. You can start introducing functional tables, data lists, or registration modules here inside this section.
+        </p>
+    </div>
+
+</div>
 {% endblock %}
