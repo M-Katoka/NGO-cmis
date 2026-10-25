@@ -1,43 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - NGO-cmis{% endblock %}
+{% block title %}Cases - NGO-cmis{% endblock %}
 
 {% block content %}
 <div style="display: flex; flex-direction: column; gap: 2rem;">
     
-    <!-- Page Header Section -->
+    <!-- Header with Action Button -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 0.25rem;">Dashboard Overview</h1>
-            <p style="font-size: 0.95rem; color: #6b7280;">Welcome back, manage your records and tracking systems below.</p>
+            <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827; margin-bottom: 0.25rem;">Case Management</h1>
+            <p style="font-size: 0.95rem; color: #6b7280;">View, track, and manage active beneficiary cases.</p>
         </div>
+        <a href="#" style="background-color: #0f766e; color: white; padding: 0.625rem 1.25rem; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.875rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); transition: background-color 0.2s;">
+            + New Case
+        </a>
     </div>
 
-    <!-- Metrics Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+    <!-- Data Table Card Container -->
+    <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); overflow: hidden;">
         
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Total Beneficiaries</p>
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: #111827;">All Cases</h3>
+            <input type="text" placeholder="Search cases..." style="padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; outline: none; width: 240px;">
         </div>
 
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Active Projects</p>
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+                <thead>
+                    <tr style="background-color: #f9fafb; color: #4b5563; border-bottom: 1px solid #e5e7eb;">
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 600;">Case ID</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 600;">Beneficiary</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 600;">Category</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 600;">Status</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 600; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody style="color: #374151;">
+                    <!-- Example row format (Loop through your records using Jinja `for case in cases`) -->
+                    <tr style="border-bottom: 1px solid #f3f4f6;">
+                        <td style="padding: 1rem 1.5rem; font-weight: 500; color: #111827;">#CS-2026-001</td>
+                        <td style="padding: 1rem 1.5rem;">Jane Doe</td>
+                        <td style="padding: 1rem 1.5rem;">Community Support</td>
+                        <td style="padding: 1rem 1.5rem;">
+                            <span style="background-color: #ecfdf5; color: #065f46; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">Active</span>
+                        </td>
+                        <td style="padding: 1rem 1.5rem; text-align: right;">
+                            <a href="#" style="color: #0f766e; text-decoration: none; font-weight: 500; margin-right: 1rem;">View</a>
+                            <a href="#" style="color: #6b7280; text-decoration: none; font-weight: 500;">Edit</a>
+                        </td>
+                    </tr>
+                    <!-- End loop -->
+                </tbody>
+            </table>
         </div>
 
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-            <p style="font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem;">Reports Generated</p>
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #111827;">--</h3>
-        </div>
-
-    </div>
-
-    <!-- Main Content Area / Action Panel -->
-    <div style="background: #ffffff; padding: 2rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">Quick Actions</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.5;">
-            Your interface is now standardized with a modern layout structure. You can start introducing functional tables, data lists, or registration modules here inside this section.
-        </p>
     </div>
 
 </div>
